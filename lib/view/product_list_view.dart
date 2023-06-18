@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shopping_cart_flutter/view/cart_view.dart';
 
 class ProductListView extends StatefulWidget {
   const ProductListView({Key? key}) : super(key: key);
@@ -8,13 +9,22 @@ class ProductListView extends StatefulWidget {
 }
 
 class _ProductListViewState extends State<ProductListView> {
+
+  int counter = 0;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: const Text('Product List'),
-        ),
-        body: ListView.builder(
+      appBar: AppBar(
+        title: const Text('Product List'),
+        actions: [
+          IconButton(
+            onPressed: (){},
+            icon: Icon(Icons.more_vert)
+          )
+        ],
+      ),
+      body: ListView.builder(
         physics: const BouncingScrollPhysics(),
         itemCount: 16,
         itemBuilder: (context, index) {
@@ -31,16 +41,32 @@ class _ProductListViewState extends State<ProductListView> {
               title: Text('Product ${index+1}',
                 style: TextStyle(
                   fontSize: 18,
-                  fontWeight: FontWeight.w500
+                  fontWeight: FontWeight.w500,
+                  color: Colors.black
                 ),
               ),
-              subtitle: Text('\$ ${((index+1)*10).toStringAsFixed(2)}'),
+              subtitle: Text('\$ ${((index+1)*10).toStringAsFixed(2)}',
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w300,
+                  color: Colors.black
+                ),
+              ),
               trailing: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   ElevatedButton(
                     onPressed: (){
-
+                      SnackBar snackBar = const SnackBar(
+                        content: Text('Cannot remove anymore!'),
+                        backgroundColor: Colors.redAccent,
+                      );
+                      setState(() {
+                        counter > 0
+                                ? counter--
+                                : ScaffoldMessenger.of(context)
+                                    .showSnackBar(snackBar);
+                          });
                     },
                     child: Icon(Icons.remove),
                     style: ElevatedButton.styleFrom(
@@ -49,7 +75,7 @@ class _ProductListViewState extends State<ProductListView> {
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 2),
-                    child: Text('2',
+                    child: Text(counter.toString(),
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w500
@@ -58,7 +84,9 @@ class _ProductListViewState extends State<ProductListView> {
                   ),
                   ElevatedButton(
                     onPressed: (){
-
+                      setState(() {
+                        counter++;
+                      });
                     },
                     child: Icon(Icons.add),
                     style: ElevatedButton.styleFrom(
@@ -70,7 +98,17 @@ class _ProductListViewState extends State<ProductListView> {
             ),
           );
         }
-      )
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: (){
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => CartView(counter,)),
+          );
+        },
+        child: Icon(Icons.shopping_cart),
+        elevation: 5,
+      ),
     );
   }
 }
