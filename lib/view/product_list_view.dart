@@ -12,23 +12,25 @@ class ProductListView extends StatefulWidget {
 
 class _ProductListViewState extends State<ProductListView> {
 
-  List<Product> product = [
-    Product(name: 'name', price: 1.0),
-    Product(name: 'name1', price: 4.0),
-    Product(name: 'name2', price: 10.0),
-  ];
+  List<Product> product = [];
+
+  void initializeProduct() {
+    for (int i = 1; i <= 40; i++) {
+      product.add(Product(name: 'Product $i', price: i * 10));
+    }
+  }
+
+  @override
+  void initState() {
+    initializeProduct();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Product List'),
-        actions: [
-          IconButton(
-            onPressed: (){},
-            icon: Icon(Icons.more_vert)
-          )
-        ],
       ),
       body: ListView.builder(
         physics: const BouncingScrollPhysics(),
@@ -45,58 +47,59 @@ class _ProductListViewState extends State<ProductListView> {
             elevation: 2,
             child: ListTile(
               title: Text(product[index].name.toString(),
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.w500,
                   color: Colors.black
                 ),
               ),
               subtitle: Text('\$ ${product[index].price}',
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w300,
                   color: Colors.black
                 ),
               ),
-              trailing: Row(
+              trailing: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  ElevatedButton(
-                    onPressed: (){
-                      SnackBar snackBar = const SnackBar(
-                        content: Text('Cannot remove anymore!'),
-                        backgroundColor: Colors.redAccent,
-                      );
-                      setState(() {
-                        product[index].inCartCount > 0
-                                ? product[index].inCartCount--
-                                : ScaffoldMessenger.of(context)
-                                    .showSnackBar(snackBar);
-                          });
-                    },
-                    child: Icon(Icons.remove),
-                    style: ElevatedButton.styleFrom(
-                        shape: CircleBorder()
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 2),
+                  Expanded(
                     child: Text(product[index].inCartCount.toString(),
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w500
                       ),
                     ),
                   ),
-                  ElevatedButton(
-                    onPressed: (){
-                      setState(() {
-                        product[index].inCartCount++;
-                      });
-                    },
-                    child: Icon(Icons.add),
-                    style: ElevatedButton.styleFrom(
-                      shape: CircleBorder()
+                  Expanded(
+                    child: ElevatedButton(
+                      onPressed: (){
+                        setState(() {
+                          product[index].inCartCount++;
+
+                          if(product[index].inCartCount == 5) {
+                            showDialog(
+                              context: context,
+                              barrierDismissible: false,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  title: const Text('Congratulations!'),
+                                  content: Text('You\'ve bought 5 ${product[index].name}!'),
+                                  actions: [
+                                    TextButton(
+                                      child: const Text('Ok'),
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
+                          }
+                        });
+                      },
+                      child: const Icon(Icons.add),
                     ),
                   )
                 ],
@@ -117,8 +120,8 @@ class _ProductListViewState extends State<ProductListView> {
             MaterialPageRoute(builder: (context) => CartView(totalProductInCart)),
           );
         },
-        child: Icon(Icons.shopping_cart),
         elevation: 5,
+        child: const Icon(Icons.shopping_cart),
       ),
     );
   }
