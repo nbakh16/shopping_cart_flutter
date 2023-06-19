@@ -1,16 +1,10 @@
-# shopping_cart_flutter
+# Shopping cart flutter
 
-Shopping cart mechanism. Product add, romove or purchase. Ostad course assignment, module 07.
+#### Ostad course assignment, module 07.
 
-## Getting Started
+<img src="https://github.com/nbakh16/shopping_cart_flutter/assets/38786346/3030a1eb-415b-4c5e-b77a-e868093525bd" alt="screenshot1" width="300">
 
-This project is a starting point for a Flutter application.
+<img src="https://github.com/nbakh16/shopping_cart_flutter/assets/38786346/f3c6b406-fa5b-4927-98c6-dafdc406edd3" alt="screenshot1" width="300">
 
-A few resources to get you started if this is your first Flutter project:
+<img src="https://github.com/nbakh16/shopping_cart_flutter/assets/38786346/59615a8a-f328-4729-a54b-6bf844e97f19" alt="screenshot1" width="300">
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
