@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:shopping_cart_flutter/view/cart_view.dart';
 
+import '../model/product_model.dart';
+
 class ProductListView extends StatefulWidget {
   const ProductListView({Key? key}) : super(key: key);
 
@@ -10,7 +12,11 @@ class ProductListView extends StatefulWidget {
 
 class _ProductListViewState extends State<ProductListView> {
 
-  int counter = 0;
+  List<Product> product = [
+    Product(name: 'name', price: 1.0),
+    Product(name: 'name1', price: 4.0),
+    Product(name: 'name2', price: 10.0),
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +32,7 @@ class _ProductListViewState extends State<ProductListView> {
       ),
       body: ListView.builder(
         physics: const BouncingScrollPhysics(),
-        itemCount: 16,
+        itemCount: product.length,
         itemBuilder: (context, index) {
           return Card(
             shape: RoundedRectangleBorder(
@@ -38,14 +44,14 @@ class _ProductListViewState extends State<ProductListView> {
             ),
             elevation: 2,
             child: ListTile(
-              title: Text('Product ${index+1}',
+              title: Text(product[index].name.toString(),
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.w500,
                   color: Colors.black
                 ),
               ),
-              subtitle: Text('\$ ${((index+1)*10).toStringAsFixed(2)}',
+              subtitle: Text('\$ ${product[index].price}',
                 style: TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w300,
@@ -62,8 +68,8 @@ class _ProductListViewState extends State<ProductListView> {
                         backgroundColor: Colors.redAccent,
                       );
                       setState(() {
-                        counter > 0
-                                ? counter--
+                        product[index].inCartCount > 0
+                                ? product[index].inCartCount--
                                 : ScaffoldMessenger.of(context)
                                     .showSnackBar(snackBar);
                           });
@@ -75,7 +81,7 @@ class _ProductListViewState extends State<ProductListView> {
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 2),
-                    child: Text(counter.toString(),
+                    child: Text(product[index].inCartCount.toString(),
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w500
@@ -85,7 +91,7 @@ class _ProductListViewState extends State<ProductListView> {
                   ElevatedButton(
                     onPressed: (){
                       setState(() {
-                        counter++;
+                        product[index].inCartCount++;
                       });
                     },
                     child: Icon(Icons.add),
@@ -101,9 +107,14 @@ class _ProductListViewState extends State<ProductListView> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: (){
+          int totalProductInCart = 0;
+          for (var i=0; i<product.length; i++){
+            totalProductInCart += product[i].inCartCount;
+          }
+
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => CartView(counter,)),
+            MaterialPageRoute(builder: (context) => CartView(totalProductInCart)),
           );
         },
         child: Icon(Icons.shopping_cart),
