@@ -34,12 +34,13 @@ class _ProductListViewState extends State<ProductListView> {
         actions: [
           IconButton(
               onPressed: (){},
-              icon: Icon(Icons.more_vert)
+              icon: const Icon(Icons.more_vert)
           )
         ],
       ),
       body: ListView.builder(
           physics: const BouncingScrollPhysics(),
+          padding: const EdgeInsets.all(8),
           itemCount: products.length,
           itemBuilder: (context, index) {
             return Card(
@@ -53,14 +54,14 @@ class _ProductListViewState extends State<ProductListView> {
               elevation: 2,
               child: ListTile(
                 title: Text(products[index].name.toString(),
-                  style: TextStyle(
+                  style: const TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.w500,
                       color: Colors.black
                   ),
                 ),
                 subtitle: Text('\$ ${products[index].price}',
-                  style: TextStyle(
+                  style: const TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w300,
                       color: Colors.black
@@ -82,15 +83,15 @@ class _ProductListViewState extends State<ProductListView> {
                               .showSnackBar(snackBar);
                         });
                       },
-                      child: Icon(Icons.remove),
                       style: ElevatedButton.styleFrom(
-                          shape: CircleBorder()
+                          shape: const CircleBorder()
                       ),
+                      child: const Icon(Icons.remove),
                     ),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 2),
                       child: Text(products[index].inCartCount.toString(),
-                        style: TextStyle(
+                        style: const TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w500
                         ),
@@ -99,13 +100,21 @@ class _ProductListViewState extends State<ProductListView> {
                     ElevatedButton(
                       onPressed: (){
                         setState(() {
-                          products[index].inCartCount++;
+                          SnackBar snackBar = const SnackBar(
+                            content: Text('Maximum amount reached!'),
+                            backgroundColor: Colors.lightGreen,
+                          );
+
+                          products[index].inCartCount < 10
+                              ? products[index].inCartCount++
+                              : ScaffoldMessenger.of(context)
+                              .showSnackBar(snackBar);
                         });
                       },
-                      child: Icon(Icons.add),
                       style: ElevatedButton.styleFrom(
-                          shape: CircleBorder()
+                          shape: const CircleBorder()
                       ),
+                      child: const Icon(Icons.add),
                     )
                   ],
                 ),
@@ -115,18 +124,29 @@ class _ProductListViewState extends State<ProductListView> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: (){
-          int totalProductInCart = 0;
+          List<Map<String, dynamic>> productsAdded = [];
+
           for (var i=0; i<products.length; i++){
-            totalProductInCart += products[i].inCartCount;
+            if(products[i].inCartCount > 0) {
+              productsAdded.add(
+                {
+                  'name' : products[i].name,
+                  'price' : products[i].price,
+                  'inCart' : products[i].inCartCount
+                },
+              );
+            }
           }
+          // print(productsAdded);
 
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => CartView(totalProductInCart)),
+            MaterialPageRoute(builder: (context) => CartView(productsAdded)),
           );
         },
-        child: Icon(Icons.shopping_cart),
         elevation: 5,
+          backgroundColor: const Color(0xFF03254C),
+        child: const Icon(Icons.shopping_cart),
       ),
     );
   }
