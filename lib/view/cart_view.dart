@@ -37,7 +37,7 @@ class CartView extends StatelessWidget {
       )
       : Column(
         children: [
-          ListView.builder(
+          ListView.builder( //ListView.separated
             shrinkWrap: true,
             padding: const EdgeInsets.fromLTRB(18, 8, 18, 80),
             itemCount: addedProducts.length,
@@ -47,12 +47,13 @@ class CartView extends StatelessWidget {
               double price = addedProducts[index].values.elementAt(1);
               int count = addedProducts[index].values.elementAt(2);
 
-              List<double> allPrices = [];
-              double totalAmount = 0.0;
-              allPrices.add(price*count);
-              for(int i=0; i<allPrices.length; i++) {
-                totalAmount += allPrices[i];
-              }
+              // List<double> allPrices = [];
+              // double totalAmount = 0.0;
+              // allPrices.add(price*count);
+              // for(int i=0; i<addedProducts.length; i++) {
+              //   allPrices.add(price*count);
+              //   print(allPrices);
+              // }
 
               return ListTile(
                 title: Text('$name ($count)'),
@@ -64,9 +65,9 @@ class CartView extends StatelessWidget {
       ),
       floatingActionButton: addedProducts.isEmpty ? Container() : FloatingActionButton.extended(
         onPressed: (){
-
+          //
         },
-        label: Text('Checkout'),
+        label: const Text('Checkout'),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
