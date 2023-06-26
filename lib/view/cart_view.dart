@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 
 class CartView extends StatelessWidget {
-  const CartView(
+  CartView(
     this.addedProducts,
     {super.key}
   );
 
   final List<Map> addedProducts;
+  final List<double> listOfAllPrices = [];
 
   @override
   Widget build(BuildContext context) {
@@ -37,29 +38,39 @@ class CartView extends StatelessWidget {
       )
       : Column(
         children: [
-          ListView.builder( //ListView.separated
+          ListView.builder(
             shrinkWrap: true,
             padding: const EdgeInsets.fromLTRB(18, 8, 18, 80),
-            itemCount: addedProducts.length,
+            itemCount: addedProducts.length + 1, //1 extra index for extra row of Total amount
             itemBuilder: (context, index) {
+              if(index <= addedProducts.length-1) {
+                String name = addedProducts[index].values.elementAt(0);
+                double price = addedProducts[index].values.elementAt(1);
+                int count = addedProducts[index].values.elementAt(2);
 
-              String name = addedProducts[index].values.elementAt(0);
-              double price = addedProducts[index].values.elementAt(1);
-              int count = addedProducts[index].values.elementAt(2);
+                listOfAllPrices.add(price*count);
+                // print(listOfAllPrices);
 
-              // List<double> allPrices = [];
-              // double totalAmount = 0.0;
-              // allPrices.add(price*count);
-              // for(int i=0; i<addedProducts.length; i++) {
-              //   allPrices.add(price*count);
-              //   print(allPrices);
-              // }
 
-              return ListTile(
-                title: Text('$name ($count)'),
-                trailing: Text('\$ ${price*count}'),
-              );
-            }
+                return ListTile(
+                  title: Text('$name ($count)'),
+                  trailing: Text('\$ ${price*count}'),
+                );
+              }
+
+              else {
+                return Text(
+                  'Total: \$ ${listOfAllPrices.reduce((value, element) => value+element)}',
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.blueAccent
+                  ),
+                  textAlign: TextAlign.center,
+                );
+              }
+
+            },
           ),
         ],
       ),
